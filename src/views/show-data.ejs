@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploaded Excel Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #f0f0f0;
+            margin: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background: #f7f7f7;
+        }
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .submit-container {
+            text-align: center;
+            margin: 20px auto;
+        }
+        .submit-btn {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .submit-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+<h1>Uploaded Excel Data</h1>
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="error" style="text-align: center; margin-bottom: 20px;">
+        <%= error %>
+    </div>
+<% } else { %>
+    <h2>Коректних записів: <%= rows.length - rows.errorCounter %> / <%= rows.length %></h2>
+<% } %>
+
+<!-- The form includes a hidden input for rows -->
+<form action="/email/send" method="POST">
+    <!-- Hidden field to send the contents of `rows` -->
+    <input type="hidden" name="rows" value='<%- JSON.stringify(rows) %>'>
+
+    <!-- Submit button placed above the table -->
+    <div class="submit-container">
+        <button class="submit-btn" type="submit">Submit Data</button>
+    </div>
+
+    <!-- Preview table (this is just for display and not submitted) -->
+    <table>
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Email</th>
+            <th>ПІБ</th>
+            <th>Логін</th>
+            <th>Пароль</th>
+            <th>Validation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% rows.forEach(function(row, index) { %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= row['e-mail'] %></td>
+                <td><%= row['ПІБ'] %></td>
+                <td><%= row['Логін'] %></td>
+                <td><%= row['Пароль'] %></td>
+                <td>
+                    <% if (row.errors && row.errors.length > 0) { %>
+                        <span class="error"><%= row.errors.join(', ') %></span>
+                    <% } else { %>
+                        Valid
+                    <% } %>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</form>
+</body>
+</html>

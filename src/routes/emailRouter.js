@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUploadPage, postUploadExcelFile } from '../controllers/emailController.js';
+import { getUploadPage, postSendEmails, postUploadExcelFile } from '../controllers/emailController.js';
 import {upload} from '../utils/emailUtils.js';
 import multer from 'multer';
 
@@ -7,6 +7,7 @@ const router = Router();
 
 router.get('/', getUploadPage);
 router.post('/upload', upload.single('excel'), postUploadExcelFile);
+router.post('/send', postSendEmails);
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

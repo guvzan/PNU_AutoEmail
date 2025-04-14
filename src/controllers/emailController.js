@@ -1,4 +1,5 @@
 import xlsx from 'xlsx';
+import { validateInputData } from '../utils/emailUtils.js';
 
 
 const getUploadPage = (req, res) => {
@@ -12,16 +13,26 @@ const postUploadExcelFile = (req, res) => {
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(sheet);
-    res.json({ rows: data });
+    const validData = validateInputData(data);
+    res.render('show-data', { rows: validData });
+    // res.json({rows: validData});
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: `Failed to process file: ${err}`
+    res.status(500).render('excel_table', {
+      rows: [],
+      error: `Failed to process file: ${err.message}`
     });
   }
 }
 
+const postSendEmails = (req, res) => {
+  const rows = JSON.parse(req.body.rows);
+  res.json({
+    rows
+  });
+}
+
 export {
   getUploadPage,
-  postUploadExcelFile
+  postUploadExcelFile,
+  postSendEmails
 }

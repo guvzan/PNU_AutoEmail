@@ -2,6 +2,9 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import {v4 as uuidv4} from 'uuid';
+import {FIELDS} from '../Constants.js';
+
+const {email, pib, login, password} = FIELDS;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,4 +28,33 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-export { upload };
+const validateInputData = (rows) => {
+  rows.errorCounter = 0;
+  rows.forEach((row) => {
+    row.errors = [];
+    if(!row[email]){
+      row.errors.push('Відсутній email');
+      row[email] = 'N/A';
+    }
+    if(!row[pib]){
+      row.errors.push('Відсутні ПІБ');
+      row[pib] = 'N/A';
+    }
+    if(!row[login]){
+      row.errors.push('Відсутній логін');
+      row[login] = 'N/A';
+    }
+    if(!row[password]){
+      row.errors.push('Відсутній пароль');
+      row[password] = 'N/A';
+    }
+    if(row.errors.length) rows.errorCounter++;
+  });
+  console.log(rows);
+  return rows;
+}
+
+export {
+  upload,
+  validateInputData
+};
