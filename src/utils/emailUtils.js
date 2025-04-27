@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {v4 as uuidv4} from 'uuid';
 import {FIELDS} from '../Constants.js';
+import nodemailer from 'nodemailer';
 
 const {email, pib, login, password} = FIELDS;
 
@@ -54,7 +55,18 @@ const validateInputData = (rows) => {
   return rows;
 }
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASS,
+  }
+});
+
 export {
   upload,
-  validateInputData
+  validateInputData,
+  transporter
 };
