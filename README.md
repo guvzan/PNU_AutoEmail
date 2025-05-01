@@ -40,3 +40,33 @@ A simple Node.js + Express application that lets you:
    ```bash
    git clone https://github.com/your-username/excel-email-sender.git
    cd excel-email-sender
+npm install
+# Gmail SMTP configuration
+PORT=3002
+GMAIL_USER=vernmaks@gmail.com
+GMAIL_APP_PASS=secret pass
+
+npm start
+
+⚙️ Configuring Gmail SMTP
+Google requires an App Password for SMTP when 2-Step Verification is on:
+
+Go to Google Account → Security → 2-Step Verification and enable it.
+
+In Security → App passwords, create a new App Password for Mail (label it e.g. “NodeMailer”).
+
+Copy the generated 16-character password into your .env as SMTP_PASS.
+
+ Usage
+Open the upload page: GET /email
+
+Upload your Excel file.
+
+Preview and validate the parsed rows.
+
+Click Submit Data to POST /email/send.
+
+View the sorted send-report at GET /results.
+
+
+
